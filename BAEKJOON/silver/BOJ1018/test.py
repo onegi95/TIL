@@ -17,7 +17,7 @@ for tc in range(T):
                 for c1 in range(c,c+8):
                     for r1 in range(r,r+8):
                         if chess_box[r1][c1]  == 'W':
-                        
+
     print(int(anw))
 
 
