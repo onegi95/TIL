@@ -9,4 +9,3 @@ for tc in range(T):
         print(1)
     else:
         stick_len = 64
-        
