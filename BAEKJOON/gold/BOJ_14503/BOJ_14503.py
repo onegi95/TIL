@@ -27,15 +27,22 @@ for tc in range(T):
         clean_map.append(temp)
     rotate_num = 0
     result_clean = 0
-    while rotate_num <=5:
+    while rotate_num <=4:
         if clean_map[x][y] == 0:
             clean_map[x][y] = 5
             result_clean +=1
             temp = rotate(x,y,A)
-            x,y,A = temp[0],temp[1],temp[2]
-        else:
-            temp = rotate(x, y, A)
-            x, y, A = temp[0], temp[1], temp[2]
-            rotate_num +=1
+            x1,y1,A1 = temp[0],temp[1],temp[2]
+            #  왼쪽이 빈곳인지 확인 하는 코드 + 아닐경우 로데이션 돌리는 코드
+            while True:
+                if clean_map[x1][y1] == 0:
+                    break
+                else:
+                    rotate_num +=1
+                    temp = rotate(x, y, A1)
+                    x1, y1, A1 = temp[0], temp[1], temp[2]
+                    if rotate_num >= 4:
+                        break
+
 
     print(result_clean)
