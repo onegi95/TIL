@@ -1,6 +1,8 @@
 import sys
 sys.stdin = open('input.txt')
 
+input = sys.stdin.readline
+
 row, colunm = map(int, input().split())
 anw = 0
 cheese_room = []
@@ -25,36 +27,8 @@ def check_air_position (start_point_x, start_point_y):
                 cheese_room[moving_x][moving_y] = 5
                 deque.append([moving_x,moving_y])
 
-
-#  앞으로 썩을 치즈를 찾아내는 알고리즘 (blank가 있을때)
-def detect_rotten_cheese():
-    global anw
-    move_x = [0, 0, -1, 1]
-    move_y = [1, -1, 0, 0]
-    while cheese_list:
-        triger = 0
-        for target in cheese_list:
-            x,y = target[0],target[1]
-            temp_score = 0
-
-            for i in range(4):
-                moving_x = move_x[i] + x
-                moving_y = move_y[i] + y
-                if 0 <= moving_x and moving_x < row and 0 <= moving_y < colunm and cheese_room[moving_x][moving_y] == 5:
-                    temp_score +=1
-                elif 0 <= moving_x and moving_x < row and 0 <= moving_y < colunm and cheese_room[moving_x][moving_y] == 0:  # 블랭크를 발견할 경우
-                    triger = 1
-            if temp_score >= 2 :
-                cheese_room[x][y] = 5
-        if triger == 1:
-            check_air_position(0,0)
-
-        anw +=1
-#  앞으로 썩을 치즈를 찾아내는 알고리즘 (blank가 없을때)
-def detect_rotten_cheese_noblank(start_point_x, start_point_y):
-    pass
-
 #  메인 코드
+
 
 # 치즈 갯수 세는 코드
 cheese_counter = 0
@@ -68,10 +42,49 @@ for i in range(row):
             air_list.append([i,j])
 timer = 0
 check_air_position(0,0)
-for i in range(len(cheese_room)):
-    print(cheese_room[i])
 
-detect_rotten_cheese()
-#  메인 알고리즘
+# print(cheese_list)
+q = []
+change_list = []
+trick_point = []
+while cheese_list:
+    temp = cheese_list.pop(0)
+    now_x, now_y = temp[0], temp[1]
+    move_x = [0, 0, -1, 1]
+    move_y = [1, -1, 0, 0]
+    count = 0
 
-print(anw)
+    for i in range(4):
+        moving_x = move_x[i] + now_x
+        moving_y = move_y[i] + now_y
+
+        if cheese_room[moving_x][moving_y] == 5:
+            count +=1
+    if count >= 2:
+        change_list.append([now_x,now_y])
+    else:
+        q.append([now_x,now_y])
+    if len(cheese_list) == 0:
+        timer +=1
+
+
+        for tp in change_list:
+            cheese_room[tp[0]][tp[1]] = 5
+            for i in range(4):
+                moving_x = move_x[i] + tp[0]
+                moving_y = move_y[i] + tp[1]
+                if cheese_room[moving_x][moving_y] == 0:
+                    trick_point.append([moving_x, moving_y])
+
+        while trick_point:
+            trick_temp = trick_point.pop(0)
+            check_air_position(trick_temp[0], trick_temp[1])
+
+        cheese_list = cheese_list + q
+        # 초기화
+        q= []
+        change_list = []
+        trick_point = []
+
+
+print(timer)
